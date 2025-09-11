@@ -1,0 +1,47 @@
+char* encryption(char* s) {
+    // 1. Remove spaces from the input string
+    int len = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] != ' ') {
+            s[len++] = s[i];
+        }
+    }
+    s[len] = '\0';
+
+    // 2. Calculate grid dimensions
+    double sqrt_len = sqrt(len);
+    int rows = floor(sqrt_len);
+    int cols = ceil(sqrt_len);
+
+    if (rows * cols < len) {
+        rows = cols; // This is a common rule for this problem
+    }
+
+    // 3. Allocate memory for the result string
+    // The maximum length is len characters + cols - 1 spaces + null terminator
+    int max_result_len = len + cols + 1;
+    char* result = malloc(sizeof(char) * max_result_len);
+    if (result == NULL) {
+        return NULL; // Handle memory allocation failure
+    }
+    int pos = 0;
+
+    // 4. Encrypt by reading columns
+    for (int c = 0; c < cols; c++) {
+        for (int r = 0; r < rows; r++) {
+            int idx = r * cols + c;
+            if (idx < len) {
+                result[pos++] = s[idx];
+            }
+        }
+        // Add a space after each column, except the last one
+        if (c < cols - 1) {
+            result[pos++] = ' ';
+        }
+    }
+
+    // 5. Add the null terminator
+    result[pos] = '\0';
+
+    return result;
+}
